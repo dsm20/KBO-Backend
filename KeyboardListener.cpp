@@ -6,7 +6,6 @@
 // Global handle for the hook
 HHOOK hHook = NULL;
 
-// --- Your "Actual Module" Functions ---
 // These functions are called by the LowLevelKeyboardProc
 void oneKeydown(DWORD vkCode) {
     std::cout << "Key Down: " << vkCode << std::endl;
@@ -17,7 +16,7 @@ void oneKeyup(DWORD vkCode) {
 }
 // ----------------------------------------
 
-// The Hook Procedure Callback
+// Callback function
 LRESULT CALLBACK LowLevelKeyboardProc(
     _In_ int    nCode,
     _In_ WPARAM wParam,
@@ -61,8 +60,9 @@ void SetGlobalHook() {
     hHook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, 
                              GetModuleHandle(NULL), 0);
 
+    // Error handling
     if (hHook == NULL) {
-        std::cerr << "Failed to install hook! Error: " << GetLastError() << std::endl;
+        std::cerr << "Failed to install hook. Error: " << GetLastError() << std::endl;
     } else {
         std::cout << "Successfully installed WH_KEYBOARD_LL hook. Listening for keys. Press ESC to exit." << std::endl;
     }
@@ -77,7 +77,7 @@ void UnsetGlobalHook() {
     }
 }
 
-// The main application entry point
+// Main
 int main() {
     SetGlobalHook();
 
@@ -92,9 +92,7 @@ int main() {
         // In this simple example, we rely on closing the console window
         // or a key being processed by LowLevelKeyboardProc to trigger an exit.
         
-        // A simple way to end the program: if the ESC key is pressed,
-        // it can be programmed inside the LowLevelKeyboardProc to call UnsetGlobalHook()
-        // and then PostQuitMessage(0); to break the loop.
+        // Alternative way to quit is to program an exit key (such as ESC) inside the callback function
     }
     
     UnsetGlobalHook();
