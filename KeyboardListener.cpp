@@ -8,6 +8,9 @@ HHOOK hHook = NULL;
 
 // These functions are called by the LowLevelKeyboardProc
 void oneKeydown(DWORD vkCode) {
+	// Here do some decoding of the vkCode in order to display the key pressed properly
+	// Additionally, figure out way to track states (mainly of modifier keys but also keeping a "sliding window" of characters pressed)
+	// 
     std::cout << "Key Down: " << vkCode << std::endl;
 }
 
