@@ -17,6 +17,8 @@ void oneKeydown(DWORD vkCode) {
 void oneKeyup(DWORD vkCode) {
     std::cout << "Key Up:   " << vkCode << std::endl;
 }
+
+// add function here for state tracking (this will be the "first stop" function and in here separate functions will be called for mod keys and/or sliding window)
 // ----------------------------------------
 
 // Callback function
