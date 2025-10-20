@@ -12,13 +12,21 @@ void oneKeydown(DWORD vkCode) {
 	// Additionally, figure out way to track states (mainly of modifier keys but also keeping a "sliding window" of characters pressed)
 	// 
     std::cout << "Key Down: " << vkCode << std::endl;
+    // intakeKey(vkCode)
 }
 
 void oneKeyup(DWORD vkCode) {
     std::cout << "Key Up:   " << vkCode << std::endl;
+    // intakeKey(vkCode)
 }
 
-// add function here for state tracking (this will be the "first stop" function and in here separate functions will be called for mod keys and/or sliding window)
+
+// Function for state tracking (this will be the "first stop" function and in here separate functions will be called for mod keys and/or sliding window)
+void intakeKey(DWORD vkCode) {
+    // call additional function here to maintain sliding window (queue or stack?) and modifier key state management (separate function)
+    // put the proof of concept print statement here (because we dont need to see key up/key down as is the case with the current print statements)
+}
+
 // ----------------------------------------
 
 // Callback function
