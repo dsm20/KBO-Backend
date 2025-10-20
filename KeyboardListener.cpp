@@ -3,6 +3,8 @@
 #include <iostream>
 #include <windows.h>
 
+// Compilation: x86_64-w64-mingw32-g++ KeyboardListener.cpp -o KeyboardHookTest.exe -static -luser32 -lgdi32 (need to compile with "static" because of lack of DLL's)
+
 // Global handle for the hook
 HHOOK hHook = NULL;
 
