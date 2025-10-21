@@ -27,7 +27,13 @@ void oneKeyup(DWORD vkCode) {
 void intakeKey(DWORD vkCode) {
     // call additional function here to maintain sliding window (queue or stack?) and modifier key state management (separate function)
     // put the proof of concept print statement here (because we dont need to see key up/key down as is the case with the current print statements)
+
+    // known key:
+    // DWORD:keyname -> 162:ctrl, 255:fn, 164:alt, 91:win, 160:shift, 20:caps, 9:tab, 27:esc 
 }
+
+// planned flow: keyup/down function -> intakeKey() -> process & track -> call respective oneKeyUp/oneKeyDown function from within intakeKey() -> print "state" of the keystroke
+// ex: printed view will show which mod keys are being held, as well as whatever other keys are beind held, as well as the sliding window.
 
 // ----------------------------------------
 
@@ -47,21 +53,25 @@ LRESULT CALLBACK LowLevelKeyboardProc(
         switch (wParam)
         {
         case WM_KEYDOWN:
+            // oneKeydown(vkCode);
+            // break;
         case WM_SYSKEYDOWN:
             // Call your custom function for key down events
             oneKeydown(vkCode);
             break;
 
         case WM_KEYUP:
+            // oneKeyup(vkCode);
+            // break;
         case WM_SYSKEYUP:
             // Call your custom function for key up events
             oneKeyup(vkCode);
             break;
-        }
+        }   
     }
 
     // Pass the message to the next hook in the chain
-    return CallNextHookEx(hHook, nCode, wParam, lParam);
+    return CallNextHookEx(hHook, nCode, wParam, lParam);s
 }
 
 // Function to set the hook
@@ -79,7 +89,7 @@ void SetGlobalHook() {
     if (hHook == NULL) {
         std::cerr << "Failed to install hook. Error: " << GetLastError() << std::endl;
     } else {
-        std::cout << "Successfully installed WH_KEYBOARD_LL hook. Listening for keys. Press ESC to exit." << std::endl;
+        std::cout << "Successfully installed WH_KEYBOARD_LL hook. Listening for keys. Ctrl+C to exit." << std::endl;
     }
 }
 
