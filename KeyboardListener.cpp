@@ -159,14 +159,14 @@ void SetGlobalHook() {
     }
 }
 
-// Function to unset the hook
-void UnsetGlobalHook() {
-    if (hHook != NULL) {
-        UnhookWindowsHookEx(hHook);
-        hHook = NULL;
-        std::cout << "\nKeyboard hook uninstalled." << std::endl;
-    }
-}
+// // Function to unset the hook UNIMPLEMENTED
+// void UnsetGlobalHook() {
+//     if (hHook != NULL) {
+//         UnhookWindowsHookEx(hHook);
+//         hHook = NULL;
+//         std::cout << "\nKeyboard hook uninstalled." << std::endl;
+//     }
+// }
 
 // MAIN!!!!
 int main() {
@@ -186,7 +186,7 @@ int main() {
         // Alternative way to quit is to program an exit key (such as ESC) inside the callback function
     }
     
-    UnsetGlobalHook();
+    //UnsetGlobalHook();
 
     return 0;
 }
