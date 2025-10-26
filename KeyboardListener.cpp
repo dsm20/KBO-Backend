@@ -12,6 +12,8 @@ HHOOK hHook = NULL;
 
 std::deque<DWORD> g_keyHistory;
 
+
+
 // Function to get name of modifier key before I figure out a better way
 // DWORD:keyname -> 162:ctrl, 255:fn, 164:alt, 91:win, 160:shift, 20:caps, 9:tab, 27:esc 
 std::string getSpecialKeyName(DWORD vkCode) {
@@ -40,10 +42,10 @@ std::string getSpecialKeyName(DWORD vkCode) {
 
 std::deque<DWORD> updateKeyHistory(DWORD vkCode){
 
-// 2. Add the new key name to the back (most recent).
+//  Add the new key name to the back (most recent).
     g_keyHistory.push_back(vkCode);
 
-    // 3. Enforce the size limit (5). If the queue is too large, remove the oldest.
+    // Enforce the size limit (5). If the queue is too large, remove the oldest.
     if (g_keyHistory.size() > 5) {
         g_keyHistory.pop_front(); // Remove the element from the front (oldest).
     }
@@ -81,6 +83,21 @@ void intakeKey(bool stroke, DWORD vkCode) {
         std::cout << "Key Up:   " << vkCode << std::endl;
 
     }
+
+}
+
+// Function to send a single key to frontend or next file (data type undecided, ex: DWORD, string, int, etc)
+DWORD sendKey() {
+
+}
+
+// Function to send the key queue (actual data type to send is undecided as of yet)
+// Note that this and the above functions will be essentially "frames" of what is going to be displayed on the frontend
+// as in all neccesary information needs to be packaged and sent within these functions, including extra misc info such as
+// multi-modifier shortcuts (CTRL + ALT + Delete). Naturally these functions will likely have multiple params
+
+// ASK MIRANDA: will the display have a separate section for current mod keys being held 
+std::deque<DWORD> sendKeys() {
 
 }
 
