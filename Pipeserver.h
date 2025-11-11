@@ -8,7 +8,7 @@
 class PipeServer
 {
 public:
-    explicit PipeServer(const wchar_t *name = LR"(\\.\pipe\pt.keystrokes)");
+    explicit PipeServer(const wchar_t *name = LR"(\\.\pipe\KeystrokeOverlayPipe)");
     ~PipeServer();                           // Destructor
     bool EnsureClient();                     // Accept client if none
     bool SendFrame(const std::string &json); // [uint32 length][utf8]
