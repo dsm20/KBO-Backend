@@ -9,7 +9,7 @@ class SpscRing
 {
 public:
     bool try_push(const T &v)
-    {
+    {       
         auto head = _head.load(std::memory_order_relaxed); // maybe fix pointer types later?
         auto next = (head + 1) % N;
         if (next == _tail.load(std::memory_order_acquire))
