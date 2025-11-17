@@ -1,5 +1,5 @@
 // Batcher.h
-// Worker thread that batches and sends keystroke data through IPC.
+// Worker thread that batches and sends keystroke data through Named Pipe server.
 #pragma once
 #include "EventQueue.h"
 #include "KeystrokeEvent.h"

@@ -3,6 +3,7 @@
 #include "Batcher.h"
 #include <sstream>
 
+// Escapes a string for JSON inclusion
 static std::string Escape(const std::string &s)
 {
     std::string o;
@@ -33,6 +34,7 @@ static std::string Escape(const std::string &s)
     return o;
 }
 
+// Starts the batcher thread
 void Batcher::Start()
 {
     if (_run.exchange(true))

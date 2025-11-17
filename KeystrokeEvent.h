@@ -20,4 +20,4 @@ struct KeystrokeEvent
 };
 
 // Note, VKCodes don't distinguish between key cases (A vs a), therefore mod keys
-// need to be packaged in here in order to aid interpretation.
+// need to be packaged in KeystrokeEvent in order to aid interpretation.
