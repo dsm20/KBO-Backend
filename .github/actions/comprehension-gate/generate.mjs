@@ -20,9 +20,9 @@ function truncateDiff(diff) {
 
 function extractJson(text) {
   const trimmed = text.trim();
-  const fenced = trimmed.match(/```(?:json)?\s*(\{.*?\})\s*```/s);
-  if (fenced) return fenced[1];
-  const raw = trimmed.match(/\{.*\}/s);
+  const fenced = trimmed.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+  if (fenced) return fenced[1].trim();
+  const raw = trimmed.match(/\{[\s\S]*\}/);
   if (raw) return raw[0];
   return trimmed;
 }
