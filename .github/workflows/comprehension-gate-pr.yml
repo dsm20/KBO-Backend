@@ -1,0 +1,28 @@
+name: "Comprehension Gate — PR"
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  generate-questions:
+    name: Generate Comprehension Questions
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/comprehension-gate
+        with:
+          mode: generate
+          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

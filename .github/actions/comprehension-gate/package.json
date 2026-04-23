@@ -1,0 +1,7 @@
+{
+  "name": "comprehension-gate",
+  "version": "1.0.0",
+  "description": "GitHub Action to generate comprehension questions from PR diffs",
+  "type": "module",
+  "dependencies": {}
+}
