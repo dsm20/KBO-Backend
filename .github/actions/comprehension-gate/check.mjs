@@ -155,9 +155,10 @@ async function main() {
     console.log(
       `Questions are for ${gateData.sha.substring(0, 7)} but HEAD is now ${headSha.substring(0, 7)} — waiting for regenerated questions.`
     );
-    await githubApi("POST", `/issues/${prNumber}/comments`, {
-      body: "**Comprehension Gate** — these questions are outdated. New questions will be generated for the latest push.",
-    });
+    const staleBlock = "\n### Result — OUTDATED\n\nThese questions are outdated. New questions will be generated for the latest push.";
+    const staleBase = gateComment.body.replace(/\n### Result —[\s\S]*?(?=\n<!-- comprehension-gate:)/, "");
+    const staleBody = staleBase.replace(/(\n<!-- comprehension-gate:)/, `${staleBlock}\n$1`);
+    await githubApi("PATCH", `/issues/comments/${gateComment.id}`, { body: staleBody });
     setOutput("result", "skipped");
     return;
   }
@@ -166,19 +167,20 @@ async function main() {
   const answers = parseAnswers(comment.body);
 
   if (!answers) {
-    // Unrecognized format — post help message
-    await githubApi("POST", `/issues/${prNumber}/comments`, {
-      body: [
-        "**Comprehension Gate** — couldn't read your answers.",
-        "",
-        "Please use this format:",
-        "```",
-        "1. A",
-        "2. C",
-        "3. B",
-        "```",
-      ].join("\n"),
-    });
+    const helpBlock = [
+      "",
+      "### Result — UNRECOGNIZED",
+      "",
+      "Couldn't read your answers. Please reply in a format like this:",
+      "```",
+      "1. A",
+      "2. C",
+      "3. B",
+      "```",
+    ].join("\n");
+    const helpBase = gateComment.body.replace(/\n### Result —[\s\S]*?(?=\n<!-- comprehension-gate:)/, "");
+    const helpBody = helpBase.replace(/(\n<!-- comprehension-gate:)/, `${helpBlock}\n$1`);
+    await githubApi("PATCH", `/issues/comments/${gateComment.id}`, { body: helpBody });
     setOutput("result", "skipped");
     return;
   }
@@ -186,7 +188,6 @@ async function main() {
   // Check answers
   const result = checkAnswers(questions, answers);
 
-  // Post result comment
   const breakdown = result.results
     .map((r) => `Q${r.id}: ${r.passed ? "PASS" : `FAIL (you answered ${r.given})`}`)
     .join("  |  ");
@@ -195,15 +196,23 @@ async function main() {
     ? "Comprehension gate passed — this PR is cleared to merge."
     : "Please re-read the flagged parts of the diff and edit your answer or post a new comment with corrected answers.";
 
-  await githubApi("POST", `/issues/${prNumber}/comments`, {
-    body: [
-      `## Comprehension Gate — ${result.passed ? "PASSED" : "INCORRECT"}`,
-      "",
-      `**Score:** ${result.score}  |  ${breakdown}`,
-      "",
-      nextSteps,
-    ].join("\n"),
-  });
+  const resultBlock = [
+    "",
+    `### Result — ${result.passed ? "PASSED" : "INCORRECT"}`,
+    "",
+    `**Score:** ${result.score}  |  ${breakdown}`,
+    "",
+    nextSteps,
+  ].join("\n");
+
+  // Update gate comment: strip any previous result, append new one
+  const baseBody = gateComment.body.replace(/\n### Result —[\s\S]*?(?=\n<!-- comprehension-gate:)/, "");
+  const updatedBody = baseBody.replace(
+    /(\n<!-- comprehension-gate:)/,
+    `${resultBlock}\n$1`,
+  );
+
+  await githubApi("PATCH", `/issues/comments/${gateComment.id}`, { body: updatedBody });
 
   await githubApi("POST", `/issues/comments/${comment.id}/reactions`, {
     content: result.passed ? "rocket" : "confused",
