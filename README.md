@@ -148,3 +148,4 @@ This backend is designed to work with the Keystroke Overlay PowerToys module:
 - Communication: Named Pipes (high-performance local IPC)
 
 The frontend connects to the pipe, receives JSON-serialized keystroke events, and renders them as an on-screen overlay with visual effects.
+# Test change for comprehension gate e2e

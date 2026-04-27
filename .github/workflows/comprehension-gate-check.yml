@@ -2,7 +2,7 @@ name: "Comprehension Gate — Check Answers"
 
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited]
 
 permissions: {}
 

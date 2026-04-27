@@ -110,6 +110,8 @@ async function main() {
   // Fetch PR to check author
   const pr = await githubApi("GET", `/pulls/${prNumber}`);
 
+  await githubApi("POST", `/issues/comments/${comment.id}/reactions`, { content: "eyes" });
+
   if (commenter !== pr.user.login) {
     console.log(`Commenter ${commenter} is not PR author ${pr.user.login} — skipping.`);
     setOutput("result", "skipped");
@@ -191,7 +193,7 @@ async function main() {
 
   const nextSteps = result.passed
     ? "Comprehension gate passed — this PR is cleared to merge."
-    : "Please re-read the flagged parts of the diff and submit a new comment with corrected answers.";
+    : "Please re-read the flagged parts of the diff and edit your answer or post a new comment with corrected answers.";
 
   await githubApi("POST", `/issues/${prNumber}/comments`, {
     body: [
@@ -201,6 +203,10 @@ async function main() {
       "",
       nextSteps,
     ].join("\n"),
+  });
+
+  await githubApi("POST", `/issues/comments/${comment.id}/reactions`, {
+    content: result.passed ? "rocket" : "confused",
   });
 
   // Set commit status
