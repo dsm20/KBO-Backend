@@ -79,6 +79,7 @@ async function callGemini(systemPrompt, userPrompt) {
       generationConfig: {
         maxOutputTokens: 2048,
         temperature: 0.7,
+        thinkingConfig: { thinkingBudget: 0 },
       },
     }),
   });
@@ -89,7 +90,9 @@ async function callGemini(systemPrompt, userPrompt) {
   }
 
   const data = await res.json();
-  return data.candidates[0].content.parts[0].text;
+  const parts = data.candidates[0].content.parts;
+  const textPart = parts.findLast((p) => !p.thought) ?? parts[parts.length - 1];
+  return textPart.text;
 }
 
 // --- Main ---
