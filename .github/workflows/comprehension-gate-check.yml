@@ -1,0 +1,32 @@
+name: "Comprehension Gate — Check Answers"
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+jobs:
+  check-answers:
+    name: Check Comprehension Answers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      statuses: write
+      issues: read
+    if: >-
+      github.event.issue.pull_request != null &&
+      (
+        contains(github.event.comment.body, '1.') ||
+        contains(github.event.comment.body, '1)') ||
+        contains(github.event.comment.body, 'Q1')
+      )
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/comprehension-gate
+        with:
+          mode: check
+          github-token: ${{ secrets.GITHUB_TOKEN }}

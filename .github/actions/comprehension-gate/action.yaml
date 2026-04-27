@@ -1,0 +1,56 @@
+name: "Comprehension Gate"
+description: "Generate comprehension questions from PR diffs using Claude, or check answers submitted in PR comments"
+
+inputs:
+  mode:
+    description: "Action mode: 'generate' to create questions, 'check' to verify answers"
+    required: true
+  gemini-api-key:
+    description: "Google Gemini API key (required for generate mode only)"
+    required: false
+  github-token:
+    description: "GitHub token for posting comments and setting commit statuses"
+    required: true
+
+outputs:
+  result:
+    description: "Action result: 'generated', 'skipped', 'passed', or 'failed'"
+    value: ${{ steps.run.outputs.result }}
+  score:
+    description: "Answer score, e.g. '2/3' (check mode only)"
+    value: ${{ steps.run.outputs.score }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 22
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ${{ github.action_path }}
+        npm ci --quiet
+
+    - name: Validate mode
+      shell: bash
+      env:
+        MODE: ${{ inputs.mode }}
+      run: |
+        if [[ "$MODE" != "generate" && "$MODE" != "check" ]]; then
+          echo "::error::Invalid mode: $MODE (must be 'generate' or 'check')"
+          exit 1
+        fi
+
+    - name: Run comprehension gate
+      id: run
+      shell: bash
+      env:
+        MODE: ${{ inputs.mode }}
+        GEMINI_API_KEY: ${{ inputs.gemini-api-key }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GITHUB_EVENT_PATH: ${{ github.event_path }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: node "${{ github.action_path }}/${MODE}.mjs"
