@@ -163,6 +163,7 @@ Requirements:
 - Provide exactly 4 options (A, B, C, D) per question
 - Exactly one option must be clearly correct; the other three should be plausible distractors that reflect common misunderstandings
 - Questions must not be answerable without understanding the code — not just re-reading the diff
+- Randomize which letter (A, B, C, or D) is the correct answer for each question — do NOT default to a fixed pattern
 
 Return ONLY valid JSON — no markdown, no explanation:
 {
@@ -171,19 +172,7 @@ Return ONLY valid JSON — no markdown, no explanation:
             "id": 1,
             "question": "...",
             "choices": {"A": "...", "B": "...", "C": "...", "D": "..."},
-            "correct": "B"
-        },
-        {
-            "id": 2,
-            "question": "...",
-            "choices": {"A": "...", "B": "...", "C": "...", "D": "..."},
-            "correct": "A"
-        },
-        {
-            "id": 3,
-            "question": "...",
-            "choices": {"A": "...", "B": "...", "C": "...", "D": "..."},
-            "correct": "D"
+            "correct": "C"
         }
     ]
 }
